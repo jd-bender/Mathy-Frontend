@@ -31,5 +31,6 @@ export default function useQueryParams() {
         setParam,
         deleteParam,
     ];
+
     return vals;
 }
