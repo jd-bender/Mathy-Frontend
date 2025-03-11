@@ -6,59 +6,55 @@ import useQueryParams from "../hooks/useQueryParams";
 export default function ModuleLayout({ Lesson, Practice }) {
     const [params, setParam, deleteParam] = useQueryParams();
 
-    let activeTab = "0";
+    const queryParamTab = params.get("tab");
+    const defaultActiveTab = "lesson";
 
-    if (params.get("tab")) {
-        switch (params.get("tab")) {
-            case "lesson":
-                activeTab = "0";
-                break;
-            case "practice":
-                activeTab = "1";
-                break;
-        }
-    }
+    const [activeTab, setActiveTab] = useState(
+        queryParamTab || defaultActiveTab,
+    );
 
     useEffect(() => {
-        if (!params.get("tab")) {
-            setParam("tab", "lesson");
+        if (!queryParamTab) {
+            setParam("tab", defaultActiveTab);
         }
-    }, [params, setParam]);
+    });
 
-    const [selectedTab, setSelectedTab] = useState(activeTab);
-    const [activeLessonPageIndex, setActiveLessonPageIndex] = useState(0);
-
-    const handleSelectedTabChange = (
+    const handleActiveTabChange = (
         _event: SyntheticEvent,
-        newTab: string,
+        newActiveTabName: string,
     ) => {
-        setParam("tab", newTab === "0" ? "lesson" : "practice");
+        setActiveTab(newActiveTabName);
+        setParam("tab", newActiveTabName);
 
-        if (newTab === "1") {
+        if (newActiveTabName === "practice") {
             deleteParam("page");
         }
-
-        setSelectedTab(newTab);
     };
+
+    const [activeLessonPageIndex, setActiveLessonPageIndex] = useState(0);
 
     return (
         <>
-            <TabContext value={selectedTab}>
+            <TabContext value={activeTab}>
                 <div className="border-b border-neutral-300 flex justify-center h-12">
-                    <TabList onChange={handleSelectedTabChange}>
-                        <Tab label="Lesson" value="0" />
-                        <Tab label="Practice" value="1" />
+                    <TabList onChange={handleActiveTabChange}>
+                        <Tab label="Lesson" value="lesson" />
+                        <Tab label="Practice" value="practice" />
                     </TabList>
                 </div>
 
                 <div className="relative px-80 flex-1 overflow-y-auto">
-                    <TabPanel value="0" keepMounted sx={{ overflowY: "auto" }}>
+                    <TabPanel
+                        value="lesson"
+                        keepMounted
+                        sx={{ overflowY: "auto" }}
+                    >
                         <Lesson
                             activePageIndex={activeLessonPageIndex}
                             setActivePageIndex={setActiveLessonPageIndex}
                         />
                     </TabPanel>
-                    <TabPanel value="1" keepMounted>
+                    <TabPanel value="practice" keepMounted>
                         <div className="flex justify-center">
                             <Practice />
                         </div>
