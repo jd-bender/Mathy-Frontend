@@ -1,25 +1,12 @@
-"use client";
-import { Button } from "@mui/material";
-import { useRouter } from "next/navigation";
+import NavButton from "components/NavButton";
 
-export default function Page() {
-    const router = useRouter();
-
+const Page = () => {
     return (
         <div className="p-12 mx-48 flex justify-evenly">
-            <Button
-                variant="contained"
-                onClick={() => router.push("/arithmetic/addition-1")}
-            >
-                Addition 1
-            </Button>
-
-            <Button
-                variant="contained"
-                onClick={() => router.push("/arithmetic/subtraction-1")}
-            >
-                Subtraction 1
-            </Button>
+            <NavButton text="Addition 1" path="/arithmetic/addition-1" />
+            <NavButton text="Subtraction 1" path="/arithmetic/subtraction-1" />
         </div>
     );
-}
+};
+
+export default Page;
